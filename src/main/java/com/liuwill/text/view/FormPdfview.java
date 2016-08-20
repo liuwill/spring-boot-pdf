@@ -1,16 +1,15 @@
 package com.liuwill.text.view;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.liuwill.text.utils.FreemarkerUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.StringReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -24,10 +23,11 @@ public class FormPdfview extends AbstractITextPdfView {
         URL fileResource = FormPdfview.class.getResource("/templates");
         String html = FreemarkerUtils.loadFtlHtml(new File(fileResource.getFile()), "simpleForm.ftl", model);
 
-        XMLWorkerHelper.getInstance().parseXHtml(writer, document, new ByteArrayInputStream(html.getBytes()), Charset.forName("UTF-8"), new AsianFontProvider() );
+        XMLWorkerHelper.getInstance().parseXHtml(writer, document, new StringReader(html));
+        //XMLWorkerHelper.getInstance().parseXHtml(writer, document, new ByteArrayInputStream(html.getBytes()), Charset.forName("UTF-8"), new AsianFontProvider() );
     }
 
-    private static final Font getChineseFont(float size) {
+    /*private static final Font getChineseFont(float size) {
         Font FontChinese = null;
         try {
             BaseFont bfChinese = BaseFont.createFont("STSong-Light",
@@ -39,5 +39,5 @@ public class FormPdfview extends AbstractITextPdfView {
             System.err.println(ioe.getMessage());
         }
         return FontChinese;
-    }
+    }*/
 }

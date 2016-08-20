@@ -16,6 +16,7 @@ public class AsianFontProvider extends XMLWorkerFontProvider {
         BaseFont bf = null;
         try {
             bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+            //bf = BaseFont.createFont("font/msyh.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         } catch (Exception e) {
             e.printStackTrace();
         }
