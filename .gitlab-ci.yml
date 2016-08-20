@@ -1,0 +1,22 @@
+image: java:openjdk-8
+
+stages:
+  - test
+
+before_script:
+  - pwd
+  - cd /usr/lib
+  - curl -fl https://downloads.gradle.org/distributions/gradle-2.13-bin.zip -o gradle-bin.zip
+  - unzip "gradle-bin.zip"
+  - ln -s "/usr/lib/gradle-2.13/bin/gradle" /usr/bin/gradle
+  - rm "gradle-bin.zip"
+  - GRADLE_HOME=/usr/lib/gradle
+  - PATH=$PATH:$GRADLE_HOME/bin
+  - cd /builds/ehuarong/web-front-work
+
+test_async:
+  stage: test
+  script:
+   - gradle test --info
+  tags:
+    - docker
