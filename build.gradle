@@ -1,0 +1,108 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath('org.freemarker:freemarker:2.3.23')
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+    }
+}
+
+group 'com.liuwill.text'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'findbugs'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jar {
+    baseName = 'boot-pdf'
+    version =  '0.1.0'
+}
+
+bootRepackage {
+    mainClass = 'com.liuwill.text.PdfApplication'
+}
+
+sourceSets{
+    main{
+        java {srcDir "src/main/java"}
+        resources {srcDir "src/main/resources"}
+    }
+    test{
+        java {srcDir "src/test/java"}
+        resources {srcDir "src/test/resources"}
+    }
+}
+mainClassName = 'com.liuwill.text.PdfApplication'
+
+dependencies {
+    // tag::jetty[]
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    // end::jetty[]
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-aop")
+    compile("org.springframework:spring-context-support")
+
+    compile	'com.itextpdf:itextpdf:5.5.8'
+    compile	'com.itextpdf:itext-asian:5.2.0'
+    compile	'com.itextpdf.tool:xmlworker:5.5.9'
+
+    compile	'org.freemarker:freemarker:2.3.23'
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    testCompile (group: 'junit', name: 'junit', version: '4.12')
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+// [ FindBugs Start**/
+findbugs{
+    ignoreFailures=true
+    findbugsTest.enabled=false
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+// ] FindBugs End**/
+
+// [ Heroku Support
+task stage {
+    dependsOn build
+}
+// ]
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    exclude 'com.liuwill.text.tools.*'
+    filter {
+        //include all integration tests
+        includeTestsMatching "*IntegTest"
+        includeTestsMatching "*MvcTest"
+
+        //include all tests from package
+        //includeTestsMatching "com.liuwill.text.test.*"
+
+        //includeTestsMatching "*FtlTest"
+    }
+}
